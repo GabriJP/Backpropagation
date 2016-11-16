@@ -1,3 +1,4 @@
+# coding=utf-8
 import tensorflow as tf
 import numpy as np
 import string
@@ -65,9 +66,9 @@ def net(learning_rate, number_of_hidden_elements):
     y_ = tf.placeholder(tf.float32, [None, OUTPUT_LAYER_WIDTH * OUTPUT_LAYER_HEIGHT])
 
     "Initialization of weights for hidden and output layers"
-    W1 = tf.Variable(
+    w1 = tf.Variable(
         np.float32(np.random.rand(INPUT_LAYER_WIDTH * INPUT_LAYER_HEIGHT, number_of_hidden_elements)) * 0.1)
-    W2 = tf.Variable(
+    w2 = tf.Variable(
         np.float32(np.random.rand(number_of_hidden_elements, OUTPUT_LAYER_WIDTH * OUTPUT_LAYER_HEIGHT)) * 0.1)
 
     "Initialization ob bias for hidden and output layers"
@@ -75,8 +76,8 @@ def net(learning_rate, number_of_hidden_elements):
     b2 = tf.Variable(np.float32(np.random.rand(OUTPUT_LAYER_WIDTH * OUTPUT_LAYER_HEIGHT)) * 0.1)
 
     "Output of hidden and output layers (activation function)"
-    y1 = tf.sigmoid(tf.matmul(x, W1) + b1)
-    y2 = tf.nn.softmax(tf.matmul(y1, W2) + b2)
+    y1 = tf.sigmoid(tf.matmul(x, w1) + b1)
+    y2 = tf.nn.softmax(tf.matmul(y1, w2) + b2)
 
     "Function to reduce"
     cross_entropy = tf.reduce_sum(tf.square(y_ - y2))
