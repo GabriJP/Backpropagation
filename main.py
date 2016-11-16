@@ -2,6 +2,7 @@ import tensorflow as tf
 import numpy as np
 import string
 import statistics
+import random
 
 TARGET_ERROR = 0.2
 INPUT_FILE = "Input/letters.txt"
@@ -12,6 +13,7 @@ OUTPUT_LAYER_WIDTH = 1
 OUTPUT_LAYER_HEIGHT = 26
 ALPHABET = list(string.ascii_uppercase)
 MAX_ITERATIONS = 10000
+NOISE = 0.1
 
 
 def one_hot(l, n):
@@ -36,12 +38,21 @@ def get_pattern(pattern, width, height):
     return result
 
 
+def add_noise(data_list, noise_ratio):
+    for data in data_list:
+        for index in range(len(data)):
+            if random.random() < noise_ratio:
+                # data[index] = random.choice((0, 1))
+                data[index] = 1 if data[index] is 0 else 0
+
+
 def net(learning_rate, number_of_hidden_elements):
     print("net(%f, %d)" % (learning_rate, number_of_hidden_elements))
 
     data = np.genfromtxt(INPUT_FILE, delimiter=DELIMITER, dtype=int)
     np.random.shuffle(data)
     x_data = data[:, 0:35]
+    add_noise(x_data, NOISE)
     # y_data = x_data
     y_data = one_hot(data[:, 35], 26)
 
@@ -96,7 +107,7 @@ def net(learning_rate, number_of_hidden_elements):
 
 
 for rate in np.arange(0.05, 1.5, 0.05):
-    for number_of_elements in range(5, 15):
+    for number_of_elements in range(7, 15):
         current = []
         for i in range(10):
             current.append(net(rate, number_of_elements))
