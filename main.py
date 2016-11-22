@@ -3,6 +3,9 @@ import csv
 import numpy as np
 
 from nn import net_gradiente
+from nn import net_gradiente2Capas
+from nn import net_momento
+from nn import net_momento2Capas
 
 csvfile = open('datos.csv', 'w')
 writer = csv.writer(csvfile, delimiter=';', quotechar='|', quoting=csv.QUOTE_MINIMAL)
@@ -18,7 +21,10 @@ for noise in np.arange(0, 0.26, 0.02):
         for neuronas_capa_1 in n_neuronas:
             control = False
             for i in range(3):
-                itera = net_gradiente(ratio, neuronas_capa_1, noise)
+                #itera = net_gradiente(ratio, neuronas_capa_1, noise)
+                #itera = net_momento(ratio, neuronas_capa_1, noise)
+                #itera = net_gradiente2Capas(ratio, neuronas_capa_1, 5, noise)
+                itera = net_momento2Capas(ratio, neuronas_capa_1, 5, noise)
                 if itera >= 0:
                     control = True
                     n_iteraciones.append(itera)
