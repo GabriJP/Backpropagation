@@ -14,6 +14,7 @@ OUTPUT_LAYER_HEIGHT = 26
 ALPHABET = list(string.ascii_uppercase)
 MAX_ITERATIONS = 100000
 
+
 def one_hot(l, n):
     """Returns an array of arrays of zeros, each internal array with one 1 (the element of the list)"""
     if type(l) == list:
@@ -36,17 +37,10 @@ def get_pattern(pattern, width, height):
     return result
 
 
-def add_noise(data_list, noise_ratio):
-    result = []
-    for data in data_list:
-        current_pattern = []
-        result.append(current_pattern)
-        for index in range(len(data)):
-            if random.random() < noise_ratio:
-                current_pattern.append(1 if data[index] is 0 else 0)
-            else:
-                current_pattern.append(data[index])
-    return result
+def add_noise(data, noise_ratio):
+    change = (lambda x: 1 if x == 0 else 0)
+    func = (lambda x: change(x) if random.random() < noise_ratio else x)
+    return list(map(func, data))
 
 
 def net_gradiente(learning_rate, number_of_hidden_elements, noise):
@@ -54,8 +48,7 @@ def net_gradiente(learning_rate, number_of_hidden_elements, noise):
 
     data = np.genfromtxt(INPUT_FILE, delimiter=DELIMITER, dtype=int)
     np.random.shuffle(data)
-    x = data[:, 0:35]
-    x_data = add_noise(x, noise)
+    x_data = data[:, 0:35]
 
     # y_data = x_data
     y_data = one_hot(data[:, 35], 26)
@@ -85,26 +78,24 @@ def net_gradiente(learning_rate, number_of_hidden_elements, noise):
     sess = tf.Session()
     sess.run(tf.initialize_all_variables())
 
-    errors = [sess.run(cross_entropy, feed_dict={x: x_data, y_: y_data})]
+    errors = [sess.run(cross_entropy, feed_dict={x: add_noise(x_data, noise), y_: y_data})]
 
     "Training"
     while errors[-1] > TARGET_ERROR and len(errors) < MAX_ITERATIONS:
-        sess.run(train, feed_dict={x: x_data, y_: y_data})
-        errors.append(sess.run(cross_entropy, feed_dict={x: x_data, y_: y_data}))
+        sess.run(train, feed_dict={x: add_noise(x_data, noise), y_: y_data})
+        errors.append(sess.run(cross_entropy, feed_dict={x: add_noise(x_data, noise), y_: y_data}))
     if len(errors) >= MAX_ITERATIONS:
         return -1
     else:
         return len(errors)
 
 
-
-def net_momento(learning_rate, number_of_hidden_elements, noise, momentum = 0.9):
+def net_momento(learning_rate, number_of_hidden_elements, noise, momentum=0.9):
     print("net(%f, %d)" % (learning_rate, number_of_hidden_elements))
 
     data = np.genfromtxt(INPUT_FILE, delimiter=DELIMITER, dtype=int)
     np.random.shuffle(data)
-    x = data[:, 0:35]
-    x_data = add_noise(x, noise)
+    x_data = data[:, 0:35]
 
     # y_data = x_data
     y_data = one_hot(data[:, 35], 26)
@@ -134,25 +125,24 @@ def net_momento(learning_rate, number_of_hidden_elements, noise, momentum = 0.9)
     sess = tf.Session()
     sess.run(tf.initialize_all_variables())
 
-    errors = [sess.run(cross_entropy, feed_dict={x: x_data, y_: y_data})]
+    errors = [sess.run(cross_entropy, feed_dict={x: add_noise(x_data, noise), y_: y_data})]
 
     "Training"
     while errors[-1] > TARGET_ERROR and len(errors) < MAX_ITERATIONS:
-        sess.run(train, feed_dict={x: x_data, y_: y_data})
-        errors.append(sess.run(cross_entropy, feed_dict={x: x_data, y_: y_data}))
+        sess.run(train, feed_dict={x: add_noise(x_data, noise), y_: y_data})
+        errors.append(sess.run(cross_entropy, feed_dict={x: add_noise(x_data, noise), y_: y_data}))
     if len(errors) >= MAX_ITERATIONS:
         return -1
     else:
         return len(errors)
 
 
-def net_gradiente2Capas(learning_rate, number_of_hidden_elements_layer1, number_of_hidden_elements_layer2, noise):
+def net_gradiente2capas(learning_rate, number_of_hidden_elements_layer1, number_of_hidden_elements_layer2, noise):
     print("net(%f, %d,%d)" % (learning_rate, number_of_hidden_elements_layer1, number_of_hidden_elements_layer2))
 
     data = np.genfromtxt(INPUT_FILE, delimiter=DELIMITER, dtype=int)
     np.random.shuffle(data)
-    x = data[:, 0:35]
-    x_data = add_noise(x, noise)
+    x_data = data[:, 0:35]
 
     # y_data = x_data
     y_data = one_hot(data[:, 35], 26)
@@ -186,25 +176,25 @@ def net_gradiente2Capas(learning_rate, number_of_hidden_elements_layer1, number_
     sess = tf.Session()
     sess.run(tf.initialize_all_variables())
 
-    errors = [sess.run(cross_entropy, feed_dict={x: x_data, y_: y_data})]
+    errors = [sess.run(cross_entropy, feed_dict={x: add_noise(x_data, noise), y_: y_data})]
 
     "Training"
     while errors[-1] > TARGET_ERROR and len(errors) < MAX_ITERATIONS:
-        sess.run(train, feed_dict={x: x_data, y_: y_data})
-        errors.append(sess.run(cross_entropy, feed_dict={x: x_data, y_: y_data}))
+        sess.run(train, feed_dict={x: add_noise(x_data, noise), y_: y_data})
+        errors.append(sess.run(cross_entropy, feed_dict={x: add_noise(x_data, noise), y_: y_data}))
     if len(errors) >= MAX_ITERATIONS:
         return -1
     else:
         return len(errors)
 
 
-def net_momento2Capas(learning_rate, number_of_hidden_elements_layer1, number_of_hidden_elements_layer2, noise, momentum = 0.9):
+def net_momento2capas(learning_rate, number_of_hidden_elements_layer1, number_of_hidden_elements_layer2, noise,
+                      momentum=0.9):
     print("net(%f, %d,%d)" % (learning_rate, number_of_hidden_elements_layer1, number_of_hidden_elements_layer2))
 
     data = np.genfromtxt(INPUT_FILE, delimiter=DELIMITER, dtype=int)
     np.random.shuffle(data)
-    x = data[:, 0:35]
-    x_data = add_noise(x, noise)
+    x_data = data[:, 0:35]
 
     # y_data = x_data
     y_data = one_hot(data[:, 35], 26)
@@ -238,12 +228,12 @@ def net_momento2Capas(learning_rate, number_of_hidden_elements_layer1, number_of
     sess = tf.Session()
     sess.run(tf.initialize_all_variables())
 
-    errors = [sess.run(cross_entropy, feed_dict={x: x_data, y_: y_data})]
+    errors = [sess.run(cross_entropy, feed_dict={x: add_noise(x_data, noise), y_: y_data})]
 
     "Training"
     while errors[-1] > TARGET_ERROR and len(errors) < MAX_ITERATIONS:
-        sess.run(train, feed_dict={x: x_data, y_: y_data})
-        errors.append(sess.run(cross_entropy, feed_dict={x: x_data, y_: y_data}))
+        sess.run(train, feed_dict={x: add_noise(x_data, noise), y_: y_data})
+        errors.append(sess.run(cross_entropy, feed_dict={x: add_noise(x_data, noise), y_: y_data}))
     if len(errors) >= MAX_ITERATIONS:
         return -1
     else:
