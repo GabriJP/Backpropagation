@@ -17,6 +17,7 @@ for capas in [net_1capa, net_2capas]:
                 noise, str(func)[str(func).rfind('.') + 1:-2])])
             writer.writerow([])
             writer.writerow(['ratio'] + list(map(str, n_neuronas)))
+            csvfile.flush()
             for ratio in np.arange(0.05, 1.5, 0.05):
                 n_iteraciones = []
                 for neuronas_capa_1 in n_neuronas:
@@ -30,6 +31,8 @@ for capas in [net_1capa, net_2capas]:
                     if not control:
                         n_iteraciones.append('Max_iter')
                 writer.writerow([ratio] + n_iteraciones)
+                csvfile.flush()
             writer.writerow([])
 
+csvfile.flush()
 csvfile.close()
