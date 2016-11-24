@@ -2,8 +2,18 @@ import csv
 
 import numpy as np
 from tensorflow import train
+from multiprocessing.pool import ThreadPool
 
 from nn import net_1capa, net_2capas
+
+
+def ejecuta(rate, funcion_nn, noise, funcion_bp):
+    for i in range(3):
+        itera = capas(rate, funcion_nn, noise, funcion_bp)
+        if itera >= 0:
+            return itera
+    return 'Max_iter'
+
 
 csvfile = open('datos.csv', 'w')
 writer = csv.writer(csvfile, delimiter=';', quotechar='|', quoting=csv.QUOTE_MINIMAL)
@@ -13,7 +23,7 @@ n_neuronas = list(range(7, 20))
 for capas in [net_1capa, net_2capas]:
     for func in [train.GradientDescentOptimizer, train.MomentumOptimizer]:
         for noise in np.arange(0, 0.25, 0.05):
-            writer.writerow(["Ejecución con % ruido %f y funcion %s" % (
+            writer.writerow(["Ejecución con %s ruido %f y funcion %s" % (
                 "una capa oculta" if capas == net_1capa else "dos capas ocultas", noise,
                 str(func)[str(func).rfind('.') + 1:-2])])
 
@@ -21,18 +31,11 @@ for capas in [net_1capa, net_2capas]:
             writer.writerow(['ratio'] + list(map(str, n_neuronas)))
             csvfile.flush()
             for ratio in np.arange(0.2, 1.2, 0.1):
-                n_iteraciones = []
-                for neuronas_capa_1 in n_neuronas:
-                    control = False
-                    for i in range(3):
-                        itera = capas(ratio, neuronas_capa_1, noise, train.GradientDescentOptimizer)
-                        if itera >= 0:
-                            control = True
-                            n_iteraciones.append(itera)
-                            break
-                    if not control:
-                        n_iteraciones.append('Max_iter')
-                writer.writerow([ratio] + n_iteraciones)
+                pool = ThreadPool()
+                results = [pool.apply_async(ejecuta, (ratio, capas, noise, func)) for neuronas_capa in n_neuronas]
+                pool.close()
+                pool.join()
+                writer.writerow(results)
                 csvfile.flush()
             writer.writerow([])
 
