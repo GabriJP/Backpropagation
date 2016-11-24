@@ -1,15 +1,14 @@
 import csv
 
 import numpy as np
-from tensorflow import train
 from multiprocessing.pool import ThreadPool
 
 from nn import net_1capa, net_2capas
 
 
-def ejecuta(rate, funcion_nn, noise, funcion_bp):
+def ejecuta(funcion_nn, rate, neuronas, noise, funcion_bp):
     for i in range(3):
-        itera = capas(rate, funcion_nn, noise, funcion_bp)
+        itera = funcion_nn(rate, neuronas, noise, funcion_bp)
         if itera >= 0:
             return itera
     return 'Max_iter'
@@ -18,10 +17,10 @@ def ejecuta(rate, funcion_nn, noise, funcion_bp):
 csvfile = open('datos.csv', 'w')
 writer = csv.writer(csvfile, delimiter=';', quotechar='|', quoting=csv.QUOTE_MINIMAL)
 
-n_neuronas = list(range(7, 20))
+n_neuronas = list(range(7, 25))
 
 for capas in [net_1capa, net_2capas]:
-    for func in [train.GradientDescentOptimizer, train.MomentumOptimizer]:
+    for func in [1]:
         for noise in np.arange(0, 0.25, 0.05):
             writer.writerow(["Ejecución con %s ruido %f y funcion %s" % (
                 "una capa oculta" if capas == net_1capa else "dos capas ocultas", noise,
@@ -32,7 +31,8 @@ for capas in [net_1capa, net_2capas]:
             csvfile.flush()
             for ratio in np.arange(0.2, 1.2, 0.1):
                 pool = ThreadPool()
-                results = [pool.apply_async(ejecuta, (ratio, capas, noise, func)) for neuronas_capa in n_neuronas]
+                results = [pool.apply_async(ejecuta, (capas, ratio, neuronas_capa, noise, func)) for neuronas_capa in
+                           n_neuronas]
                 pool.close()
                 pool.join()
                 writer.writerow(results)
@@ -41,7 +41,6 @@ for capas in [net_1capa, net_2capas]:
 
 csvfile.flush()
 csvfile.close()
-
 
 """
 neuronas: 7 a 20

@@ -73,7 +73,10 @@ def net_1capa(learning_rate, number_of_hidden_elements, noise, func):
 
     "Function to reduce"
     cross_entropy = tf.reduce_sum(tf.square(y_ - y2))
-    train = func(learning_rate).minimize(cross_entropy)
+    if func == 1:
+        train = tf.train.GradientDescentOptimizer(learning_rate).minimize(cross_entropy)
+    else:
+        train = tf.train.MomentumOptimizer(learning_rate).minimize(cross_entropy)
 
     "TF initialization"
     sess = tf.Session()
