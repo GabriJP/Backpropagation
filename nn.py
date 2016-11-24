@@ -12,7 +12,7 @@ INPUT_LAYER_HEIGHT = 7
 OUTPUT_LAYER_WIDTH = 1
 OUTPUT_LAYER_HEIGHT = 26
 ALPHABET = list(string.ascii_uppercase)
-MAX_ITERATIONS = 10000
+MAX_ITERATIONS = 750
 
 
 def one_hot(l, n):

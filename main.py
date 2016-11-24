@@ -8,11 +8,11 @@ from nn import net_1capa, net_2capas
 csvfile = open('datos.csv', 'w')
 writer = csv.writer(csvfile, delimiter=';', quotechar='|', quoting=csv.QUOTE_MINIMAL)
 
-n_neuronas = list(range(5, 25))
+n_neuronas = list(range(7, 20))
 
 for capas in [net_1capa, net_2capas]:
     for func in [train.GradientDescentOptimizer, train.MomentumOptimizer]:
-        for noise in np.arange(0, 0.26, 0.02):
+        for noise in np.arange(0, 0.25, 0.05):
             writer.writerow(["Ejecución con % ruido %f y funcion %s" % (
                 "una capa oculta" if capas == net_1capa else "dos capas ocultas", noise,
                 str(func)[str(func).rfind('.') + 1:-2])])
@@ -20,7 +20,7 @@ for capas in [net_1capa, net_2capas]:
             writer.writerow([])
             writer.writerow(['ratio'] + list(map(str, n_neuronas)))
             csvfile.flush()
-            for ratio in np.arange(0.05, 1.5, 0.05):
+            for ratio in np.arange(0.2, 1.2, 0.1):
                 n_iteraciones = []
                 for neuronas_capa_1 in n_neuronas:
                     control = False
@@ -38,3 +38,12 @@ for capas in [net_1capa, net_2capas]:
 
 csvfile.flush()
 csvfile.close()
+
+
+"""
+neuronas: 7 a 20
+ruido: 0 a 0.25 en pasos de 0.05
+ratio de 0.2 a 1.2 en pasos de 0.1
+maximo iteraciones en 750
+
+"""
