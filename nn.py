@@ -44,7 +44,7 @@ def add_noise(data, noise_ratio):
     return list(map(check_every_value, data))
 
 
-def net_1capa(learning_rate, number_of_hidden_elements, noise, func):
+def net_1capa(learning_rate, number_of_hidden_elements, noise, func, momentum = 0.9):
     print("net(%f, %d)" % (learning_rate, number_of_hidden_elements))
 
     data = np.genfromtxt(INPUT_FILE, delimiter=DELIMITER, dtype=int)
@@ -76,7 +76,7 @@ def net_1capa(learning_rate, number_of_hidden_elements, noise, func):
     if func == 1:
         train = tf.train.GradientDescentOptimizer(learning_rate).minimize(cross_entropy)
     else:
-        train = tf.train.MomentumOptimizer(learning_rate).minimize(cross_entropy)
+        train = tf.train.MomentumOptimizer(learning_rate, momentum).minimize(cross_entropy)
 
     "TF initialization"
     sess = tf.Session()
@@ -94,8 +94,11 @@ def net_1capa(learning_rate, number_of_hidden_elements, noise, func):
         return len(errors)
 
 
-def net_2capas(learning_rate, number_of_hidden_elements_layer1, number_of_hidden_elements_layer2, noise, func):
-    print("net(%f, %d,%d)" % (learning_rate, number_of_hidden_elements_layer1, number_of_hidden_elements_layer2))
+def net_2capas(learning_rate, number_of_elements_layer1, noise, func, momentum=0.9, number_of_elements_layer2=None):
+    if number_of_elements_layer2 is None:
+        number_of_elements_layer2 = number_of_elements_layer1
+
+    print("net(%f, %d,%d)" % (learning_rate, number_of_elements_layer1, number_of_elements_layer2))
 
     data = np.genfromtxt(INPUT_FILE, delimiter=DELIMITER, dtype=int)
     np.random.shuffle(data)
@@ -109,15 +112,15 @@ def net_2capas(learning_rate, number_of_hidden_elements_layer1, number_of_hidden
 
     "Initialization of weights for hidden and output layers"
     w1 = tf.Variable(
-        np.float32(np.random.rand(INPUT_LAYER_WIDTH * INPUT_LAYER_HEIGHT, number_of_hidden_elements_layer1)) * 0.1)
+        np.float32(np.random.rand(INPUT_LAYER_WIDTH * INPUT_LAYER_HEIGHT, number_of_elements_layer1)) * 0.1)
     w2 = tf.Variable(
-        np.float32(np.random.rand(number_of_hidden_elements_layer1, number_of_hidden_elements_layer2)) * 0.1)
+        np.float32(np.random.rand(number_of_elements_layer1, number_of_elements_layer2)) * 0.1)
     w3 = tf.Variable(
-        np.float32(np.random.rand(number_of_hidden_elements_layer2, OUTPUT_LAYER_WIDTH * OUTPUT_LAYER_HEIGHT)) * 0.1)
+        np.float32(np.random.rand(number_of_elements_layer2, OUTPUT_LAYER_WIDTH * OUTPUT_LAYER_HEIGHT)) * 0.1)
 
     "Initialization ob bias for hidden and output layers"
-    b1 = tf.Variable(np.float32(np.random.rand(number_of_hidden_elements_layer1)) * 0.1)
-    b2 = tf.Variable(np.float32(np.random.rand(number_of_hidden_elements_layer2)) * 0.1)
+    b1 = tf.Variable(np.float32(np.random.rand(number_of_elements_layer1)) * 0.1)
+    b2 = tf.Variable(np.float32(np.random.rand(number_of_elements_layer2)) * 0.1)
     b3 = tf.Variable(np.float32(np.random.rand(OUTPUT_LAYER_WIDTH * OUTPUT_LAYER_HEIGHT)) * 0.1)
 
     "Output of hidden and output layers (activation function)"
@@ -127,7 +130,10 @@ def net_2capas(learning_rate, number_of_hidden_elements_layer1, number_of_hidden
 
     "Function to reduce"
     cross_entropy = tf.reduce_sum(tf.square(y_ - y3))
-    train = func(learning_rate).minimize(cross_entropy)
+    if func == 1:
+        train = tf.train.GradientDescentOptimizer(learning_rate).minimize(cross_entropy)
+    else:
+        train = tf.train.MomentumOptimizer(learning_rate, momentum).minimize(cross_entropy)
 
     "TF initialization"
     sess = tf.Session()

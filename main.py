@@ -6,9 +6,9 @@ from multiprocessing.pool import ThreadPool
 from nn import net_1capa, net_2capas
 
 
-def ejecuta(funcion_nn, rate, neuronas, noise, funcion_bp):
+def ejecuta(funcion_nn, rate, neuronas, noise, funcion_bp, momentum):
     for i in range(3):
-        itera = funcion_nn(rate, neuronas, noise, funcion_bp)
+        itera = funcion_nn(rate, neuronas, noise, funcion_bp, momentum)
         if itera >= 0:
             return itera
     return 'Max_iter'
@@ -21,23 +21,24 @@ n_neuronas = list(range(7, 25))
 
 for capas in [net_1capa, net_2capas]:
     for func in [1]:
-        for noise in np.arange(0, 0.25, 0.05):
-            writer.writerow(["Ejecución con %s ruido %f y funcion %s" % (
-                "una capa oculta" if capas == net_1capa else "dos capas ocultas", noise,
-                str(func)[str(func).rfind('.') + 1:-2])])
+        for momentum in np.arange(0.4, 1, 0.5) if func != 1 else [0]:
+            for noise in np.arange(0, 0.25, 0.05):
+                writer.writerow(["Ejecución con %s ruido %f y funcion %s" % (
+                    "una capa oculta" if capas == net_1capa else "dos capas ocultas", noise,
+                    str(func)[str(func).rfind('.') + 1:-2])])
 
-            writer.writerow([])
-            writer.writerow(['ratio'] + list(map(str, n_neuronas)))
-            csvfile.flush()
-            for ratio in np.arange(0.2, 1.2, 0.1):
-                pool = ThreadPool()
-                results = [pool.apply_async(ejecuta, (capas, ratio, neuronas_capa, noise, func)) for neuronas_capa in
-                           n_neuronas]
-                pool.close()
-                pool.join()
-                writer.writerow([ratio] + [result.get() for result in results])
+                writer.writerow([])
+                writer.writerow(['ratio'] + list(map(str, n_neuronas)))
                 csvfile.flush()
-            writer.writerow([])
+                for ratio in np.arange(0.2, 1.2, 0.1):
+                    pool = ThreadPool()
+                    results = [pool.apply_async(ejecuta, (capas, ratio, neuronas_capa, noise, func, momentum)) for neuronas_capa in
+                               n_neuronas]
+                    pool.close()
+                    pool.join()
+                    writer.writerow([ratio] + [result.get() for result in results])
+                    csvfile.flush()
+                writer.writerow([])
 
 csvfile.flush()
 csvfile.close()
