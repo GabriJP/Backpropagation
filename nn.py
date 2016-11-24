@@ -38,9 +38,10 @@ def get_pattern(pattern, width, height):
 
 
 def add_noise(data, noise_ratio):
-    change = (lambda x: 1 if x == 0 else 0)
-    func = (lambda x: change(x) if random.random() < noise_ratio else x)
-    return list(map(func, data))
+    swap_value = (lambda x: 1 if x == 0 else 0)
+    swap_if_random = (lambda x: swap_value(x) if random.random() < noise_ratio else x)
+    check_every_value = (lambda x: list(map(swap_if_random, x)))
+    return list(map(check_every_value, data))
 
 
 def net_1capa(learning_rate, number_of_hidden_elements, noise, func):
