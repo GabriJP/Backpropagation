@@ -35,7 +35,7 @@ for capas in [net_1capa, net_2capas]:
                            n_neuronas]
                 pool.close()
                 pool.join()
-                writer.writerow([result.get() for result in results])
+                writer.writerow([ratio] + [result.get() for result in results])
                 csvfile.flush()
             writer.writerow([])
 
