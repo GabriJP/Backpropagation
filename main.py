@@ -19,9 +19,9 @@ writer = csv.writer(csvfile, delimiter=';', quotechar='|', quoting=csv.QUOTE_MIN
 
 n_neuronas = list(range(7, 25))
 
-for capas in [net_1capa, net_2capas]:
-    for func in [1]:
-        for momentum in np.arange(0.4, 1, 0.5) if func != 1 else [0]:
+for capas in [net_1capa]:
+    for func in [1, 2]:
+        for momentum in np.arange(0.1, 1, 0.1) if func != 1 else [0]:
             for noise in np.arange(0, 0.25, 0.05):
                 writer.writerow(["Ejecución con %s ruido %f y funcion %s" % (
                     "una capa oculta" if capas == net_1capa else "dos capas ocultas", noise,
