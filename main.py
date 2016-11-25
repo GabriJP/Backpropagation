@@ -40,7 +40,7 @@ for capas in [net_1capa, net_2capas]:
                     else:
                         result = [(capa1, capa2) for capa1 in n_neuronas for capa2 in n_neuronas]
 
-                    pool = ThreadPool()
+                    pool = ThreadPool(processes=325)
                     results = [pool.apply_async(ejecuta, (capas, ratio, neu_1, noise, func, momentum, neu_2)) for
                                neu_1, neu_2 in result]
                     pool.close()
