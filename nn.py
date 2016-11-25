@@ -44,7 +44,7 @@ def add_noise(data, noise_ratio):
     return list(map(check_every_value, data))
 
 
-def net_1capa(learning_rate, number_of_hidden_elements, noise, func, momentum = 0.9):
+def net_1capa(learning_rate, number_of_hidden_elements, noise, func, momentum=0.9, ele=2):
     print("net(%f, %d)" % (learning_rate, number_of_hidden_elements))
 
     data = np.genfromtxt(INPUT_FILE, delimiter=DELIMITER, dtype=int)
