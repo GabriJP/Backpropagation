@@ -4,7 +4,7 @@ import numpy as np
 import string
 import random
 
-TARGET_ERROR = 0.2
+TARGET_ERROR = 0.1
 INPUT_FILE = "Input/letters.txt"
 DELIMITER = " "
 INPUT_LAYER_WIDTH = 5
@@ -80,7 +80,7 @@ def net_1capa(learning_rate, number_of_hidden_elements, noise, func, momentum=0.
 
     "TF initialization"
     sess = tf.Session()
-    sess.run(tf.initialize_all_variables())
+    sess.run(tf.global_variables_initializer())
 
     errors = [sess.run(cross_entropy, feed_dict={x: add_noise(x_data, noise), y_: y_data})]
 
@@ -137,7 +137,7 @@ def net_2capas(learning_rate, number_of_elements_layer1, noise, func, momentum=0
 
     "TF initialization"
     sess = tf.Session()
-    sess.run(tf.initialize_all_variables())
+    sess.run(tf.global_variables_initializer())
 
     errors = [sess.run(cross_entropy, feed_dict={x: add_noise(x_data, noise), y_: y_data})]
 
