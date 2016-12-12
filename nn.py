@@ -45,7 +45,10 @@ def add_noise(data, noise_ratio):
 
 
 def net_1capa(learning_rate, number_of_hidden_elements, noise, func, momentum=0.9, ele=2):
-    print("net(%f, %d)" % (learning_rate, number_of_hidden_elements))
+    if func==2:
+        print("net(%f, %d mom:%f)" % (learning_rate, number_of_hidden_elements, momentum))
+    else:
+        print("net(%f, %d)" % (learning_rate, number_of_hidden_elements))
 
     data = np.genfromtxt(INPUT_FILE, delimiter=DELIMITER, dtype=int)
     np.random.shuffle(data)
@@ -98,7 +101,10 @@ def net_2capas(learning_rate, number_of_elements_layer1, noise, func, momentum=0
     if number_of_elements_layer2 is None:
         number_of_elements_layer2 = number_of_elements_layer1
 
-    print("net(%f, %d,%d)" % (learning_rate, number_of_elements_layer1, number_of_elements_layer2))
+    if func == 2:
+        print("net(%f, %d,%d mom:%f)" % (learning_rate, number_of_elements_layer1, number_of_elements_layer2, momentum))
+    else:
+        print("net(%f, %d,%d)" % (learning_rate, number_of_elements_layer1, number_of_elements_layer2))
 
     data = np.genfromtxt(INPUT_FILE, delimiter=DELIMITER, dtype=int)
     np.random.shuffle(data)
