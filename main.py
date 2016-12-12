@@ -1,3 +1,4 @@
+# coding=utf-8
 import csv
 import numpy as np
 from multiprocessing.pool import ThreadPool
@@ -112,13 +113,12 @@ for momento in np.arange(0.01, 0.5, 0.15):
     with ThreadPool(processes=32) as pool:
         results = [
             pool.apply_async(ejecuta, (net_2capas, 0.2, neu_1, 0.14, 2, momento, neu_2)) for
-            neu_1, neu_2 in [(15,20),(20,15),(20,20)]]
+            neu_1, neu_2 in [(15, 20), (20, 15), (20, 20)]]
         pool.close()
         pool.join()
-        writer.writerow([ratio] + [r.get() for r in results])
+        writer.writerow([momento] + [r.get() for r in results])
         csvfile.flush()
 writer.writerow([])
-
 
 csvfile.flush()
 csvfile.close()
@@ -140,7 +140,8 @@ def bigAnalysis():
                         writer.writerow(['ratio'] + [str(capa1) for capa1 in n_neuronas])
                     else:
                         neuronas_por_capa = [(capa1, capa2) for capa1 in n_neuronas for capa2 in n_neuronas]
-                        writer.writerow(['ratio'] + ["%d - %d" % (capa1, capa2) for capa1 in n_neuronas for capa2 in n_neuronas])
+                        writer.writerow(
+                            ['ratio'] + ["%d - %d" % (capa1, capa2) for capa1 in n_neuronas for capa2 in n_neuronas])
 
                     for ratio in [0.5, 0.8, 1.1]:
                         with ThreadPool(processes=32) as pool:
