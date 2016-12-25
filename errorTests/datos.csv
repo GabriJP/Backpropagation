@@ -1,0 +1,24 @@
+Ejecución con una capa oculta ruido 0.00 y funcion gradiente
+ratio;11;14;17;20
+0.4;7.189;4.39244;5.70398;3.21131
+0.6;5.46929;3.45188;4.69472;4.19178
+0.8;3.32148;4.03321;6.04593;3.36638
+
+Ejecución con una capa oculta ruido 0.00 y funcion gradiente con momento 0.5
+ratio;11;14;17;20
+0.4;10.1667;3.11401;4.03682;1.211
+0.6;4.71463;1.88358;7.24382;5.74806
+0.8;8.91804;5.7554;5.62654;4.55793
+
+Ejecución con una capa oculta ruido 0.00 y funcion gradiente con momento 0.7
+ratio;11;14;17;20
+0.4;6.2191;3.63828;6.7821;2.79555
+0.6;10.944;5.70861;4.95478;1.24036
+0.8;37.2165;2.27774;2.89806;49.5136
+
+Ejecución con una capa oculta ruido 0.00 y funcion gradiente con momento 0.9
+ratio;11;14;17;20
+0.4;6.08488;4.66162;4.77578;5.32105
+0.6;12.0691;47.9999;16.33;3.12329
+0.8;47.72;50.0;32.997;48.9552
+
